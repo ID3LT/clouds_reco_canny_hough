@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import skvideo.io
-import numpy as np
 from filterpy.kalman import KalmanFilter
 from filterpy.common import Q_discrete_white_noise
 import sqlite3
@@ -78,8 +77,9 @@ for i in range(parts_count*parts_count):
 
 
 #cap = cv2.VideoCapture(0) #Iš kameros
-filename = 'DJI_0295.MP4'
-cap = cv2.VideoCapture('dataset debesys/' + filename)
+#filename = 'DJI_0295.MP4'
+filename = 'DJI_0637.MOV'
+cap = cv2.VideoCapture('C:/Users/14168/Documents/GitHub/clouds_reco_canny_hough/' + filename)
 #cap = cv2.VideoCapture('/mnt/48ECBA7C72F0B029/Clouds Video/GH015798.MP4') #Iš video
 #cap = cv2.VideoCapture("/home/ivan/Desktop/Straipsniai/Test data/ships and water/Pexels Videos 2257010.mp4") #Iš video
 #cap = cv2.VideoCapture("/home/ivan/Desktop/Straipsniai/Test data/Road CAr Pexels Videos 1394254.mp4") #Iš video
@@ -90,8 +90,9 @@ frame_height = int(cap.get(4))
 print(frame_width)
 print(frame_height)
 
-writer = skvideo.io.FFmpegWriter("outputvideo.mp4")
-writer_edges = skvideo.io.FFmpegWriter("outputvideo_edges.mp4")
+#print(skvideo._FFMPEG_SUPPORTED_ENCODERS)
+#writer = skvideo.io.FFmpegWriter("outputvideo.mp4", outputdict={'-vcodec': 'libx264', '-b': '30000000'})
+#writer_edges = skvideo.io.FFmpegWriter("outputvideo_edges.mp4", outputdict={'-vcodec': 'libx264', '-b': '30000000'})
 
 
 
@@ -191,8 +192,8 @@ while(1):
                 g = frame[y][x][1]
                 r = frame[y][x][2]
                 if y < horizon_y and cloud_detect(r, g, b):
-                    cv2.circle(frame_detect, (x, y), ra, (255, 255, 0), 1)
-                    cv2.circle(rgb_edges, (x, y), ra, (255, 255, 0), 1)
+                    cv2.circle(frame_detect, (x, y), int(ra), (255, 255, 0), 1)
+                    cv2.circle(rgb_edges, (x, y), int(ra), (255, 255, 0), 1)
                     
             if grid_on:
                 conn = sqlite3.connect('clouds.db')
@@ -309,8 +310,8 @@ while(1):
         rgb_edges = cv2.cvtColor(rgb_edges, cv2.COLOR_RGB2BGR)
         vis = np.concatenate((frame_detect, rgb_edges), axis=1)
 #        cv2.imshow('vis',vis)
-        writer.writeFrame(frame_detect)
-        writer_edges.writeFrame(rgb_edges)
+        #writer.writeFrame(frame_detect)
+        #writer_edges.writeFrame(rgb_edges)
 
         frame_detect = cv2.cvtColor(frame_detect,cv2.COLOR_RGB2BGR)
         if frame_counter%write_counter == 0:
